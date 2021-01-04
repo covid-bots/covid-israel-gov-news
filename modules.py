@@ -36,7 +36,7 @@ class NewsArticle(BaseModule):
         # when the `request` methond is called,
         # it updates this property and saves in it the
         # `beautiful soup` instance.
-        self.__data = None
+        self.__data = data
 
     def request(self,) -> None:
         """ Makes a http request to the article URL, analyses the data and generates
@@ -48,24 +48,24 @@ class NewsArticle(BaseModule):
 
         response = requests.get(self.__url)
         self.__data = BeautifulSoup(response.content, 'lxml')
-        
+
     @property
     def title(self,) -> str:
         """ The title of the article, as a string. """
-        self.request() 
-        return self.__data.find(id='NewsTitle').text.strip() 
+        self.request()
+        return self.__data.find(id='NewsTitle').text.strip()
 
     @property
     def subtitle(self,) -> str:
         """ The subtitle of the article, as a string. """
         self.request()
-        return self.__data.find(id='NewsDescription').text.strip() 
+        return self.__data.find(id='NewsDescription').text.strip()
 
     @property
     def subject(self,) -> str:
         """ The subject of the article, as a string. """
         self.request()
-        return self.__data.find(id='md_content_subject').text.strip() 
+        return self.__data.find(id='md_content_subject').text.strip()
 
     @property
     def subsubjects(self,) -> typing.List[str]:
@@ -74,21 +74,21 @@ class NewsArticle(BaseModule):
         self.request()
         container = self.__data.find(id='md_content_subSubject')
         return [item.text.strip() for item in container.find_all('span')]
-    
+
     @property
     def posted_string(self,) -> str:
         """ The date the article was posted on, as a string (raw, received
         from the request) """
         self.request()
         return self.__data.find(id='md_content_publishDate').text.strip()
-        
+
     @property
     def posted_date(self,) -> datetime.date:
         """ A `datetime.date` instance that represents the date that the article
         was posted on. """
         day, month, year = self.posted_string.split('.')
         return datetime.date(day=int(day), month=int(month), year=int(year))
-    
+
     @property
     def content(self,) -> str:
         """ Returns the content of the article, as a string. """
@@ -108,12 +108,11 @@ class NewsArticle(BaseModule):
 
         self.request()
         container = self.__data.find(id='divFiles')
-        
+
         if container is None:
             return list()
-        
-        return [item['href'] for item in container.find_all('a', href=True, title=True)]
 
+        return [item['href'] for item in container.find_all('a', href=True, title=True)]
 
 
 class GovIlNews(BaseModule):
