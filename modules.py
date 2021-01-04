@@ -8,6 +8,7 @@ There are two main modules:
 
 import typing
 import datetime
+from bs4 import BeautifulSoup
 
 
 class BaseModule:
@@ -19,10 +20,15 @@ class NewsArticle(BaseModule):
     Example article can be found in https://www.gov.il/he/departments/news/03012021-03
     """
 
-    def __init__(self, url: str,):
+    def __init__(self, url: str = None, data: BeautifulSoup = None):
         """ Generates an instance, and saves the url in it. Creating an instance
         doesn't automatically makes a https request (this can be done be calling
         the `request` method). """
+
+        args_count = sum(cur is not None for cur in [data, url])
+        if args_count != 1:
+            raise ValueError(
+                "One argument exactly must be specified - either `data` or `url`")
 
         self.__url = url
 
