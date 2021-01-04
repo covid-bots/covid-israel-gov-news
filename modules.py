@@ -60,8 +60,9 @@ class NewsArticle(BaseModule):
         """ The subject of the article, as a string. """
 
     @property
-    def subsubject(self,) -> str:
-        """ The "sub-subject" of the article, as a string. """
+    def subsubjects(self,) -> typing.List[str]:
+        """ A list of the 'sub-subjects' of the article. Each element in the list
+        is a string. """
 
     @property
     def posted_string(self,) -> str:
