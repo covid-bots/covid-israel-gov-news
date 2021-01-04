@@ -8,6 +8,7 @@ There are two main modules:
 
 import typing
 import datetime
+import requests
 from bs4 import BeautifulSoup
 
 
@@ -45,35 +46,49 @@ class NewsArticle(BaseModule):
             # make a request only if there is no data.
             return
 
-        # continue writing code here...
-
+        response = requests.get(self.__url)
+        self.__data = BeautifulSoup(response.content, 'lxml')
+        
     @property
     def title(self,) -> str:
         """ The title of the article, as a string. """
+        self.request() 
+        return self.__data.find(id='NewsTitle').text.strip() 
 
     @property
     def subtitle(self,) -> str:
         """ The subtitle of the article, as a string. """
+        self.request()
+        return self.__data.find(id='NewsDescription').text.strip() 
 
     @property
     def subject(self,) -> str:
         """ The subject of the article, as a string. """
+        self.request()
+        return self.__data.find(id='md_content_subject').text.strip() 
 
     @property
     def subsubjects(self,) -> typing.List[str]:
         """ A list of the 'sub-subjects' of the article. Each element in the list
         is a string. """
-
+        self.request()
+        container = self.__data.find(id='md_content_subSubject')
+        return [item.text.strip() for item in container.find_all('span')]
+    
     @property
     def posted_string(self,) -> str:
         """ The date the article was posted on, as a string (raw, received
         from the request) """
-
+        self.request()
+        return self.__data.find(id='md_content_publishDate').text.strip()
+        
     @property
     def posted_date(self,) -> datetime.date:
         """ A `datetime.date` instance that represents the date that the article
         was posted on. """
-
+        day, month, year = self.posted_string.split('.')
+        return datetime.date(day=int(day), month=int(month), year=int(year))
+    
     @property
     def content(self,) -> str:
         """ Returns the content of the article, as a string. """
@@ -90,6 +105,15 @@ class NewsArticle(BaseModule):
 
         An example of an article with an attached file can be found on:
         https://www.gov.il/he/departments/news/agra_2021 """
+
+        self.request()
+        container = self.__data.find(id='divFiles')
+        
+        if container is None:
+            return list()
+        
+        return [item['href'] for item in container.find_all('a', href=True, title=True)]
+
 
 
 class GovIlNews(BaseModule):
