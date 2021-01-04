@@ -82,6 +82,14 @@ class NewsArticle(BaseModule):
         """ Returns the content of the article, represented as a list of sentences
         (list of strings). """
 
+    @property
+    def attached_files(self,) -> typing.List[str]:
+        """ Returns a list of urls to attached files to the article. If
+        there are no files attached, returns an empty list.
+
+        An example of an article with an attached file can be found on:
+        https://www.gov.il/he/departments/news/agra_2021 """
+
 
 class GovIlNews(BaseModule):
 
