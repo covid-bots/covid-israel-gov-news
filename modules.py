@@ -53,19 +53,34 @@ class NewsArticle(BaseModule):
     def title(self,) -> str:
         """ The title of the article, as a string. """
         self.request()
-        return self.__data.find(id='NewsTitle').text.strip()
+        element =self.__data.find(id='NewsTitle')
+        
+        if element is None or not element.text.strip():
+            return None
+
+        return element.text.strip()
 
     @property
     def subtitle(self,) -> str:
         """ The subtitle of the article, as a string. """
         self.request()
-        return self.__data.find(id='NewsDescription').text.strip()
+        element = self.__data.find(id='NewsDescription')
+        
+        if element is None or not element.text.strip():
+            return None
+            
+        return element.text.strip()
 
     @property
     def subject(self,) -> str:
         """ The subject of the article, as a string. """
         self.request()
-        return self.__data.find(id='md_content_subject').text.strip()
+        element  = self.__data.find(id='md_content_subject')
+
+        if element is None:
+            return None
+
+        return element.text.strip()
 
     @property
     def subsubjects(self,) -> typing.List[str]:
@@ -73,6 +88,10 @@ class NewsArticle(BaseModule):
         is a string. """
         self.request()
         container = self.__data.find(id='md_content_subSubject')
+
+        if container is None:
+            return list()
+
         return [item.text.strip() for item in container.find_all('span')]
 
     @property
