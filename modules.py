@@ -53,8 +53,8 @@ class NewsArticle(BaseModule):
     def title(self,) -> str:
         """ The title of the article, as a string. """
         self.request()
-        element =self.__data.find(id='NewsTitle')
-        
+        element = self.__data.find(id='NewsTitle')
+
         if element is None or not element.text.strip():
             return None
 
@@ -65,17 +65,18 @@ class NewsArticle(BaseModule):
         """ The subtitle of the article, as a string. """
         self.request()
         element = self.__data.find(id='NewsDescription')
-        
+
         if element is None or not element.text.strip():
             return None
-            
+
         return element.text.strip()
 
     @property
     def subject(self,) -> str:
         """ The subject of the article, as a string. """
         self.request()
-        element  = self.__data.find(id='md_content_subject')
+
+        element = self.__data.find(id='md_content_subject')
 
         if element is None:
             return None
