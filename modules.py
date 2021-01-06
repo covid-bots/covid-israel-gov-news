@@ -7,7 +7,7 @@ There are two main modules:
 """
 
 import typing
-import datetime
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
@@ -46,16 +46,16 @@ class NewsArticle(BaseModule):
         return [topic_data['Title'] for topic_data in self.__data['ConnectedSubTopics']]
 
     @property
-    def publish_date(self,) -> datetime.datetime:
+    def publish_date(self,) -> datetime:
         """ The date the article was posted on, as a `datatime` instance. """
-        date_iso = self.__data['PublishDate']
-        return datetime.datetime.fromisoformat(date_iso)
+        date_iso = self.__data['PublishDate'][:-1]
+        return datetime.fromisoformat(date_iso)
 
     @property
-    def update_date(self,) -> datetime.datetime:
+    def update_date(self,) -> datetime:
         """ The date the article was updated on, as a `datetime` instance. """
-        date_iso = self.__data['UpdateDate']
-        return datetime.datetime.fromisoformat(date_iso)
+        date_iso = self.__data['UpdateDate'][:-1]
+        return datetime.fromisoformat(date_iso)
 
     @property
     def content_html(self,) -> str:
@@ -83,8 +83,8 @@ class NewsArticle(BaseModule):
 
     @property
     def type(self,) -> str:
-        """ Returns the type of the article. Usually `'news'`. """
-        return self.__data['NewsTypeDesc'].lower()
+        """ Returns the type of the article. For example: `הודעות דוברות`. """
+        return self.__data['NewsTypeDesc'][0]
 
 
 class GovIlNews(BaseModule):
