@@ -37,14 +37,14 @@ class NewsArticle(BaseModule):
     @property
     def subject(self,) -> typing.List[str]:
         """ The subject of the article, as a string. """
-        return [topic_data['Title'] for topic_data in self.__data['ConnectedTopics']] 
+        return [topic_data['Title'] for topic_data in self.__data['ConnectedTopics']]
 
     @property
     def subsubjects(self,) -> typing.List[str]:
         """ A list of the 'sub-subjects' of the article. Each element in the list
         is a string. """
-        return [topic_data['Title'] for topic_data in self.__data['ConnectedSubTopics']] 
-    
+        return [topic_data['Title'] for topic_data in self.__data['ConnectedSubTopics']]
+
     @property
     def publish_date_string(self,) -> str:
         """ The date the article was posted on, as a string (raw, received
@@ -66,7 +66,7 @@ class NewsArticle(BaseModule):
     def content_text(self,) -> str:
         soup = BeautifulSoup(self.content_html, 'lxml')
         return soup.get_text()
-    
+
     @property
     def content_sentences(self,) -> typing.List[str]:
         """ Returns the content of the article, represented as a list of sentences
@@ -74,14 +74,15 @@ class NewsArticle(BaseModule):
 
         lines = self.content_text.split('.')
         return [
-            line.strip() 
-            for line in lines 
-            if line.strip() 
+            line.strip()
+            for line in lines
+            if line.strip()
         ]
 
     @property
     def type(self,) -> str:
         return self.__data['NewsTypeDesc']
+
 
 class GovIlNews(BaseModule):
 
@@ -91,7 +92,7 @@ class GovIlNews(BaseModule):
 
     def articles(self) -> typing.List[NewsArticle]:
         return [NewsArticle(article_data) for article_data in self._data['results']]
-    
+
     def latest_article(self) -> NewsArticle:
         return NewsArticle(self._data['results'][0])
 
@@ -99,10 +100,9 @@ class GovIlNews(BaseModule):
     def num_of_articles(self) -> int:
         return len(self._data['results'])
 
-    
 
 class CovidGovIlNews(GovIlNews):
-    
+
     __API_URL = r'https://www.gov.il/he/api/NewsApi/Index?limit=100&OfficeId=104cb0f4-d65a-4692-b590-94af928c19c0&topic=3ef9cac8-a1a9-4352-91d4-860efd3b720d&skip=0'
 
     def __init__(self):
