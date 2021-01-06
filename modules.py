@@ -75,6 +75,7 @@ class NewsArticle(BaseModule):
     def subject(self,) -> str:
         """ The subject of the article, as a string. """
         self.request()
+
         element = self.__data.find(id='md_content_subject')
 
         if element is None:
